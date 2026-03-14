@@ -50,4 +50,62 @@ export interface GenerationConfig {
   anthropicKey: string;
 }
 
-export type TabType = "symptoms" | "parts" | "blog" | "settings";
+export interface PageAnalysis {
+  id: string;
+  url: string;
+  symptom: string;
+  scannedAt: string;
+  // Structure
+  h1: string;
+  h2List: string[];
+  h3List: string[];
+  wordCount: number;
+  imageCount: number;
+  // Content checks
+  hasCTA: boolean;
+  ctaDetails: string;
+  hasTestimonials: boolean;
+  testimonialCount: number;
+  hasPricing: boolean;
+  hasFAQ: boolean;
+  faqCount: number;
+  hasAccessInfo: boolean;
+  hasOwnerProfile: boolean;
+  hasTreatmentFlow: boolean;
+  hasReasons: boolean; // 選ばれる理由
+  hasSymptomExplanation: boolean;
+  // Scores (0-100)
+  overallScore: number;
+  structureScore: number;
+  contentScore: number;
+  ctaScore: number;
+  seoScore: number;
+  // Issues & suggestions
+  issues: string[];
+  suggestions: string[];
+}
+
+export interface PageTemplate {
+  id: string;
+  name: string;
+  description: string;
+  // Section order and structure
+  sections: TemplateSection[];
+  // SEO template
+  titleTemplate: string; // e.g. "{area}{symptom}なら{clinicName}"
+  metaTemplate: string;
+  // Common HTML parts to insert
+  partIds: string[]; // ContentPart IDs to include
+  createdAt: string;
+}
+
+export interface TemplateSection {
+  id: string;
+  name: string;
+  type: "h2-section" | "testimonials" | "cta" | "faq" | "access" | "profile" | "treatment-flow" | "reasons" | "custom-html";
+  required: boolean;
+  prompt: string; // AI prompt for this section
+  fixedHtml?: string; // Fixed HTML (for CTA, access, etc.)
+}
+
+export type TabType = "symptoms" | "parts" | "scan" | "template" | "wp-drafts" | "blog" | "settings";

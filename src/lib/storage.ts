@@ -1,4 +1,4 @@
-import { WPConnection, SymptomPage, ContentPart, BlogDraft, GenerationConfig } from "./types";
+import { WPConnection, SymptomPage, ContentPart, BlogDraft, GenerationConfig, PageAnalysis, PageTemplate } from "./types";
 
 const KEYS = {
   wp: "hp-content-wp",
@@ -7,6 +7,8 @@ const KEYS = {
   blogs: "hp-content-blogs",
   config: "hp-content-config",
   symptomList: "hp-content-symptom-list",
+  scans: "hp-content-scans",
+  templates: "hp-content-templates",
 };
 
 function get<T>(key: string, fallback: T): T {
@@ -32,7 +34,14 @@ export function saveBlogs(data: BlogDraft[]) { set(KEYS.blogs, data); }
 
 export function getConfig(): GenerationConfig {
   return get(KEYS.config, {
-    clinicName: "", area: "", specialty: "", ownerName: "", phone: "", websiteUrl: "", bookingUrl: "", anthropicKey: "",
+    clinicName: "大口神経整体院",
+    area: "大阪市住吉区長居",
+    specialty: "重症な慢性痛・神経痛",
+    ownerName: "大口陽平",
+    phone: "070-8498-2968",
+    websiteUrl: "https://oguchi-seitai-osaka.com",
+    bookingUrl: "https://utage-system.com/line/open/Dxf5LUU0g7Vx",
+    anthropicKey: "",
   });
 }
 export function saveConfig(config: GenerationConfig) { set(KEYS.config, config); }
@@ -47,3 +56,9 @@ const DEFAULT_SYMPTOMS = [
 
 export function getSymptomList(): string[] { return get(KEYS.symptomList, DEFAULT_SYMPTOMS); }
 export function saveSymptomList(list: string[]) { set(KEYS.symptomList, list); }
+
+export function getScans(): PageAnalysis[] { return get(KEYS.scans, []); }
+export function saveScans(data: PageAnalysis[]) { set(KEYS.scans, data); }
+
+export function getTemplates(): PageTemplate[] { return get(KEYS.templates, []); }
+export function saveTemplates(data: PageTemplate[]) { set(KEYS.templates, data); }

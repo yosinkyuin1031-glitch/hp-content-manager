@@ -1,27 +1,40 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { TabType, SymptomPage, ContentPart, GenerationConfig, WPConnection } from "@/lib/types";
-import { getSymptomPages, saveSymptomPages, getParts, saveParts, getConfig, saveConfig, getWP, saveWP } from "@/lib/storage";
+import { TabType, SymptomPage, ContentPart, BlogDraft, GenerationConfig, WPConnection, PageAnalysis, PageTemplate } from "@/lib/types";
+import { getSymptomPages, saveSymptomPages, getParts, saveParts, getBlogs, saveBlogs, getConfig, saveConfig, getWP, saveWP, getScans, saveScans, getTemplates, saveTemplates } from "@/lib/storage";
 import SymptomTab from "@/components/SymptomTab";
 import PartsTab from "@/components/PartsTab";
+import ScanTab from "@/components/ScanTab";
+import TemplateTab from "@/components/TemplateTab";
+import WPDraftsTab from "@/components/WPDraftsTab";
+import BlogTab from "@/components/BlogTab";
 
 export default function Home() {
-  const [tab, setTab] = useState<TabType>("symptoms");
+  const [tab, setTab] = useState<TabType>("wp-drafts");
   const [pages, setPages] = useState<SymptomPage[]>([]);
   const [parts, setParts] = useState<ContentPart[]>([]);
   const [config, setConfig] = useState<GenerationConfig>(getConfig());
   const [wp, setWp] = useState<WPConnection | null>(null);
+  const [scans, setScans] = useState<PageAnalysis[]>([]);
+  const [templates, setTemplates] = useState<PageTemplate[]>([]);
+  const [blogs, setBlogs] = useState<BlogDraft[]>([]);
 
   useEffect(() => {
     setPages(getSymptomPages());
     setParts(getParts());
+    setBlogs(getBlogs());
     setConfig(getConfig());
     setWp(getWP());
+    setScans(getScans());
+    setTemplates(getTemplates());
   }, []);
 
   const tabs: { id: TabType; label: string; icon: string }[] = [
-    { id: "symptoms", label: "症状ページ", icon: "📄" },
+    { id: "wp-drafts", label: "下書き管理", icon: "📝" },
+    { id: "blog", label: "ブログ生成", icon: "✍️" },
+    { id: "scan", label: "ページ分析", icon: "🔍" },
+    { id: "template", label: "テンプレート生成", icon: "🚀" },
     { id: "parts", label: "パーツ管理", icon: "🧩" },
     { id: "settings", label: "設定", icon: "⚙️" },
   ];
@@ -32,7 +45,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-4 py-3">
           <h1 className="text-lg font-bold text-gray-800">
             <span className="text-indigo-600">HP</span>コンテンツ管理
-            <span className="text-xs text-gray-400 ml-2">症状別ページ一括作成</span>
+            <span className="text-xs text-gray-400 ml-2">ページ分析・一括作成</span>
           </h1>
         </div>
       </header>
@@ -51,6 +64,27 @@ export default function Home() {
       </nav>
 
       <main className="max-w-4xl mx-auto px-4 py-6">
+        {tab === "wp-drafts" && (
+          <WPDraftsTab wp={wp} config={config} parts={parts} />
+        )}
+        {tab === "blog" && (
+          <BlogTab blogs={blogs} config={config} wp={wp}
+            onUpdate={(b) => { saveBlogs(b); setBlogs(b); }} />
+        )}
+        {tab === "scan" && (
+          <ScanTab scans={scans} onUpdate={(s) => { saveScans(s); setScans(s); }} />
+        )}
+        {tab === "template" && (
+          <TemplateTab
+            templates={templates}
+            parts={parts}
+            config={config}
+            pages={pages}
+            wp={wp}
+            onUpdateTemplates={(t) => { saveTemplates(t); setTemplates(t); }}
+            onUpdatePages={(p) => { saveSymptomPages(p); setPages(p); }}
+          />
+        )}
         {tab === "symptoms" && (
           <SymptomTab
             pages={pages}
