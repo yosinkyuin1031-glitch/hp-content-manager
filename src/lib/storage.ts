@@ -6,6 +6,7 @@ const KEYS = {
   parts: "hp-content-parts",
   blogs: "hp-content-blogs",
   config: "hp-content-config",
+  symptomList: "hp-content-symptom-list",
 };
 
 function get<T>(key: string, fallback: T): T {
@@ -35,3 +36,14 @@ export function getConfig(): GenerationConfig {
   });
 }
 export function saveConfig(config: GenerationConfig) { set(KEYS.config, config); }
+
+const DEFAULT_SYMPTOMS = [
+  "腰痛", "肩こり", "頭痛", "坐骨神経痛", "ヘルニア", "脊柱管狭窄症",
+  "膝痛", "股関節痛", "五十肩", "首の痛み", "背中の痛み", "骨盤矯正",
+  "自律神経失調症", "めまい", "耳鳴り", "不眠", "手のしびれ", "足のしびれ",
+  "ぎっくり腰", "産後の骨盤矯正", "猫背矯正", "側弯症", "顎関節症",
+  "テニス肘", "腱鞘炎", "ストレートネック", "むち打ち",
+];
+
+export function getSymptomList(): string[] { return get(KEYS.symptomList, DEFAULT_SYMPTOMS); }
+export function saveSymptomList(list: string[]) { set(KEYS.symptomList, list); }

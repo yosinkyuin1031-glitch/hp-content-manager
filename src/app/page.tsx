@@ -54,6 +54,7 @@ export default function Home() {
         {tab === "symptoms" && (
           <SymptomTab
             pages={pages}
+            parts={parts}
             config={config}
             wp={wp}
             onUpdate={(p) => { saveSymptomPages(p); setPages(p); }}
